@@ -7,9 +7,9 @@ from fastapi.responses import FileResponse
 import os
 from datetime import datetime
 
-from api_backend.models import GenerateReportRequest, GenerateReportResponse
-from api_backend.backend.services.report_generate import ProfessionalReportGenerator
-from api_backend.routes.analysis import analysis_storage
+from models import GenerateReportRequest, GenerateReportResponse
+from backend.services.report_generate import ProfessionalReportGenerator
+from routes.analysis import analysis_storage
 
 router = APIRouter()
 

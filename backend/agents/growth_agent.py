@@ -2,7 +2,7 @@ import google.generativeai as genai
 
 import json
 import os
-from api_backend.config import settings
+from config import settings
 GEMINI_API_KEY = settings.GEMINI_API_KEY
 from langchain_groq import ChatGroq
 groq_api_key= settings.GROQ_API_KEY

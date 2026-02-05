@@ -3,7 +3,7 @@ import os
 import json
 import requests
 
-from api_backend.config import settings
+from config import settings
 GEMINI_API_KEY = settings.GEMINI_API_KEY
 GOOGLE_SEARCH_API_KEY= settings.GOOGLE_SEARCH_API_KEY
 SEARCH_ENGINE_ID= settings.SEARCH_ENGINE_ID

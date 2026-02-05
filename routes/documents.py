@@ -8,9 +8,9 @@ import uuid
 import os
 import shutil
 
-from api_backend.models import DocumentUploadResponse
-from api_backend.backend.services.document_processor import DocumentProcessor
-from api_backend.backend.services.rag_system import RAGSystem
+from models import DocumentUploadResponse
+from backend.services.document_processor import DocumentProcessor
+from backend.services.rag_system import RAGSystem
 
 
 router = APIRouter()

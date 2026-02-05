@@ -2,7 +2,7 @@ import google.generativeai as genai
 import os
 import requests
 import json
-from api_backend.config import settings
+from config import settings
 GEMINI_API_KEY = settings.GEMINI_API_KEY
 GOOGLE_SEARCH_API_KEY= settings.GOOGLE_SEARCH_API_KEY
 SEARCH_ENGINE_ID= settings.SEARCH_ENGINE_ID

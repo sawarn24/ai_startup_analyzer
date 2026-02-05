@@ -12,14 +12,14 @@ os.makedirs("uploads", exist_ok=True)
 os.makedirs("reports", exist_ok=True)
 os.makedirs("data", exist_ok=True)
 
-from api_backend.routes import (
+from routes import (
     analysis_router,
     document_router,
     report_router,
     email_router,
     health_router
 )
-from .config import settings
+from config import settings
 
 
 @asynccontextmanager
@@ -66,11 +66,3 @@ async def root():
     }
 
 
-if __name__ == "__main__":
-    uvicorn.run(
-        uvicorn.run(
-        "api_backend.main:app",
-        host="0.0.0.0",
-        port=8000
-    )
-    )

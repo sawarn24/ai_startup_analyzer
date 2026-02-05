@@ -4,8 +4,8 @@ Handles sending reports via email
 """
 from fastapi import APIRouter, HTTPException
 
-from api_backend.models import SendEmailRequest, SendBulkEmailRequest, EmailResponse
-from api_backend.backend.services.email_service import GmailSender
+from models import SendEmailRequest, SendBulkEmailRequest, EmailResponse
+from backend.services.email_service import GmailSender
 
 
 router = APIRouter()
