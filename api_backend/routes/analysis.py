@@ -6,14 +6,14 @@ from fastapi import APIRouter, HTTPException, BackgroundTasks
 from typing import Dict
 import json
 
-from ..models import (
+from api_backend.models import (
     StartAnalysisRequest,
     AnalysisStatusResponse,
     AnalysisResults,
     AnalysisStatus
 )
-from backend.services.rag_system import RAGSystem
-from backend.agents.agent_orchestrator import AgentOrchestrator
+from api_backend.backend.services.rag_system import RAGSystem
+from api_backend.backend.agents.agent_orchestrator import AgentOrchestrator
 
 
 router = APIRouter()

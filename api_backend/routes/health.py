@@ -3,7 +3,7 @@ Health Check Router
 Basic health and status endpoints
 """
 from fastapi import APIRouter
-from ..models import HealthResponse
+from api_backend.models import HealthResponse
 
 router = APIRouter()
 

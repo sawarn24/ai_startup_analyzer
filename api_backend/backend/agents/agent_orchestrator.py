@@ -1,9 +1,9 @@
-from backend.agents.data_extraction_agent import DataExtractionAgent
-from backend.agents.benchmarking_agent import BenchmarkingAgent
-from backend.agents.risk_detection_agent import RiskDetectionAgent
-from backend.agents.market_research_agent import MarketResearchAgent
-from backend.agents.growth_agent import GrowthAgent
-from backend.agents.recommendation_agent import RecommendationAgent
+from api_backend.backend.agents.data_extraction_agent import DataExtractionAgent
+from api_backend.backend.agents.benchmarking_agent import BenchmarkingAgent
+from api_backend.backend.agents.risk_detection_agent import RiskDetectionAgent
+from api_backend.backend.agents.market_research_agent import MarketResearchAgent
+from api_backend.backend.agents.growth_agent import GrowthAgent
+from api_backend.backend.agents.recommendation_agent import RecommendationAgent
 import os
 
 class AgentOrchestrator:
