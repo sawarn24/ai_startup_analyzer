@@ -12,7 +12,7 @@ os.makedirs("uploads", exist_ok=True)
 os.makedirs("reports", exist_ok=True)
 os.makedirs("data", exist_ok=True)
 
-from .routes import (
+from api_backend.routes import (
     analysis_router,
     document_router,
     report_router,
