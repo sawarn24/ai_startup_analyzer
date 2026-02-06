@@ -28,7 +28,7 @@ async def upload_documents(
     emails: Optional[List[UploadFile]] = File(None),
     updates: Optional[List[UploadFile]] = File(None),
 ):
-):
+
     """
     Upload and process startup documents
 
