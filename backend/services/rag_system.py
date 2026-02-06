@@ -2,7 +2,8 @@ import chromadb
 from chromadb.config import Settings
 import uuid
 import os
-from langchain_huggingface import HuggingFaceEndpointEmbeddings
+import requests
+
 # Import from your config
 try:
     from config import settings
@@ -14,29 +15,32 @@ except ImportError:
     # Fallback if running outside of api_backend structure
     from dotenv import load_dotenv
     load_dotenv()
+    
     GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
     HF_TOKEN = os.getenv('HF_TOKEN')
     UPLOAD_FOLDER = "uploads"
     DATA_FOLDER = "data"
 
+API_URL = "https://router.huggingface.co/hf-inference/models/BAAI/bge-small-en-v1.5"
+
 CHROMA_DB_PATH = "./data/chroma_db"
+
 class RAGSystem:
-    """RAG system using ChromaDB and Gemini embeddings"""
+    """RAG system using ChromaDB and HuggingFace embeddings"""
     
     def __init__(self):
-       
         self.client = chromadb.Client(Settings(
             persist_directory=CHROMA_DB_PATH,
             anonymized_telemetry=False
         ))
         
-        
-        self.embeddings = HuggingFaceEndpointEmbeddings(
-                model="sentence-transformers/all-MiniLM-L6-v2",  # Use a proper embedding model
-                 task="feature-extraction",
-                  huggingfacehub_api_token=HF_TOKEN
-)
-        
+        # Store HF token and API URL
+        self.hf_token = HF_TOKEN
+        self.api_url = API_URL
+        self.headers = {
+            "Authorization": f"Bearer {self.hf_token}",
+            "Content-Type": "application/json"
+        }
         
         try:
             self.collection = self.client.get_collection("startup_documents")
@@ -45,6 +49,40 @@ class RAGSystem:
                 name="startup_documents",
                 metadata={"description": "Startup analysis documents"}
             )
+    
+    def get_embeddings(self, texts):
+        """
+        Get embeddings from HuggingFace API
+        
+        Args:
+            texts: list of strings or single string
+            
+        Returns:
+            list of embeddings
+        """
+        # Convert single string to list
+        if isinstance(texts, str):
+            texts = [texts]
+        
+        try:
+            response = requests.post(
+                self.api_url,
+                headers=self.headers,
+                json={"inputs": texts},
+                timeout=60
+            )
+            response.raise_for_status()
+            embeddings = response.json()
+            
+            # If single text, return single embedding
+            if len(texts) == 1:
+                return embeddings[0]
+            
+            return embeddings
+            
+        except Exception as e:
+            print(f"❌ Error getting embeddings: {e}")
+            raise
     
     def add_documents(self, extracted_data, startup_id):
         """
@@ -70,7 +108,7 @@ class RAGSystem:
                 })
                 ids.append(f"{startup_id}_pitch_{i}")
         
-       
+        # Add transcript chunks
         for doc_idx, transcript in enumerate(extracted_data['transcripts']):
             for i, chunk in enumerate(transcript['chunks']):
                 all_chunks.append(chunk)
@@ -111,13 +149,13 @@ class RAGSystem:
         
         # Create embeddings and add to ChromaDB
         if all_chunks:
-           
-            embeddings_list = self.embeddings.embed_documents(all_chunks)
+            # Get embeddings for all chunks
+            embeddings = self.get_embeddings(all_chunks)
             
-           
+            # Add to ChromaDB
             self.collection.add(
                 documents=all_chunks,
-                embeddings=embeddings_list,
+                embeddings=embeddings,
                 metadatas=metadatas,
                 ids=ids
             )
@@ -128,12 +166,22 @@ class RAGSystem:
         return 0
     
     def query(self, question, startup_id, n_results=5):
+        """
+        Query the RAG system with a question
         
+        Args:
+            question: the question to ask
+            startup_id: filter by this startup
+            n_results: number of results to return
+            
+        Returns:
+            context string with retrieved documents
+        """
         try:
+            # Get embedding for the question
+            query_embedding = self.get_embeddings(question)
             
-            query_embedding = self.embeddings.embed_query(question)
-            
-            
+            # Query ChromaDB
             results = self.collection.query(
                 query_embeddings=[query_embedding],
                 n_results=n_results,
@@ -141,7 +189,7 @@ class RAGSystem:
             )
             
             if results['documents'] and results['documents'][0]:
-                
+                # Join retrieved documents with separator
                 context = "\n\n---\n\n".join(results['documents'][0])
                 return context
             
@@ -152,10 +200,23 @@ class RAGSystem:
             return ""
     
     def query_by_doc_type(self, question, startup_id, doc_type, n_results=3):
-        """Query specific document type"""
-        try:
-            query_embedding = self.embeddings.embed_query(question)
+        """
+        Query specific document type
+        
+        Args:
+            question: the question to ask
+            startup_id: filter by this startup
+            doc_type: type of document (pitch_deck, transcript, email, update)
+            n_results: number of results to return
             
+        Returns:
+            context string with retrieved documents
+        """
+        try:
+            # Get embedding for the question
+            query_embedding = self.get_embeddings(question)
+            
+            # Query ChromaDB with document type filter
             results = self.collection.query(
                 query_embeddings=[query_embedding],
                 n_results=n_results,
@@ -168,6 +229,7 @@ class RAGSystem:
             )
             
             if results['documents'] and results['documents'][0]:
+                # Join retrieved documents with separator
                 context = "\n\n---\n\n".join(results['documents'][0])
                 return context
             
@@ -175,6 +237,4 @@ class RAGSystem:
             
         except Exception as e:
             print(f"❌ Error querying by doc type: {e}")
-
             return ""
-
