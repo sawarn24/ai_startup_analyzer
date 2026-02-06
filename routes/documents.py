@@ -20,12 +20,14 @@ document_processor = DocumentProcessor()
 rag_system = RAGSystem()
 
 
+
 @router.post("/upload", response_model=DocumentUploadResponse)
 async def upload_documents(
     pitch_deck: UploadFile = File(...),
-    transcripts: Optional[List[UploadFile]] = None,
-    emails: Optional[List[UploadFile]] = None,
-    updates: Optional[List[UploadFile]] = None,
+    transcripts: Optional[List[UploadFile]] = File(None),
+    emails: Optional[List[UploadFile]] = File(None),
+    updates: Optional[List[UploadFile]] = File(None),
+):
 ):
     """
     Upload and process startup documents
