@@ -23,9 +23,9 @@ rag_system = RAGSystem()
 @router.post("/upload", response_model=DocumentUploadResponse)
 async def upload_documents(
     pitch_deck: UploadFile = File(...),
-    transcripts: Optional[List[UploadFile]] = File(default=None),
-    emails: Optional[List[UploadFile]] = File(default=None),
-    updates: Optional[List[UploadFile]] = File(default=None),
+    transcripts: Optional[List[UploadFile]] = None,
+    emails: Optional[List[UploadFile]] = None,
+    updates: Optional[List[UploadFile]] = None,
 ):
     """
     Upload and process startup documents
@@ -37,7 +37,7 @@ async def upload_documents(
     """
 
     try:
-        # Normalize optional inputs (IMPORTANT FIX)
+        # Normalize optional inputs (handle None values)
         transcripts = transcripts or []
         emails = emails or []
         updates = updates or []
