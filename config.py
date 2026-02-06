@@ -4,8 +4,9 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 # Get the root directory (parent of api_backend)
-ROOT_DIR = Path(__file__).parent.parent
-ENV_PATH = ROOT_DIR / '.env'
+BASE_DIR = Path(__file__).resolve().parent
+ENV_PATH = BASE_DIR / ".env"
+
 
 # Load .env file from root directory
 load_dotenv(dotenv_path=ENV_PATH)

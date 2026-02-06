@@ -5,7 +5,7 @@ import os
 from langchain_huggingface import HuggingFaceEndpointEmbeddings
 # Import from your config
 try:
-    from api_backend.config import settings
+    from config import settings
     GEMINI_API_KEY = settings.GEMINI_API_KEY
     HF_TOKEN = settings.HF_TOKEN
     UPLOAD_FOLDER = settings.UPLOAD_FOLDER

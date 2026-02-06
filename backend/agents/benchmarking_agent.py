@@ -14,7 +14,7 @@ class BenchmarkingAgent:
     
     def __init__(self, rag_system):
         self.rag = rag_system
-        self.model = ChatGroq(groq_api_key=groq_api_key,model="openai/gpt-oss-120b",temperature=0.7)
+        self.model = ChatGroq(groq_api_key=groq_api_key,model="Gemini 3 Flash",temperature=0.7)
     
     def benchmark(self, startup_id, extracted_data):
         """Benchmark startup against sector peers"""
