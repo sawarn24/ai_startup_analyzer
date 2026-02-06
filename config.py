@@ -7,10 +7,8 @@ from dotenv import load_dotenv
 BASE_DIR = Path(__file__).resolve().parent
 ENV_PATH = BASE_DIR / ".env"
 
-
 # Load .env file from root directory
 load_dotenv(dotenv_path=ENV_PATH)
-
 print(f"📂 Loading .env from: {ENV_PATH}")
 print(f"✅ .env exists: {ENV_PATH.exists()}")
 
